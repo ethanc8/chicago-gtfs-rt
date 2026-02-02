@@ -682,6 +682,13 @@ pub async fn train_feed(
                     stop_id: Some(impacted_service.service_id),
                     ..EntitySelector::default()                 
                 });
+            } else if impacted_service.service_id == "Pexp" {
+                // Purple Express has the identifier `Pexp` in the Alerts API
+                // but is just called `P` in GTFS, same as Purple Line.
+                informed_entity.push(EntitySelector {
+                    route_id: Some("P".to_string()),
+                    ..EntitySelector::default()
+                });
             } else {
                 informed_entity.push(EntitySelector {
                     route_id: Some(impacted_service.service_id),
