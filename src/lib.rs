@@ -3,6 +3,7 @@ use chrono::{DateTime, NaiveDateTime, TimeZone};
 use chrono_tz::America::Chicago;
 use gtfs_realtime::alert::{Cause, Effect, SeverityLevel};
 use gtfs_realtime::translated_string::Translation;
+use gtfs_structures::RouteType;
 use core::time;
 use gtfs_realtime::trip_update::stop_time_update::StopTimeProperties;
 use gtfs_realtime::trip_update::{StopTimeEvent, StopTimeUpdate};
@@ -687,6 +688,25 @@ pub async fn train_feed(
                 // but is just called `P` in GTFS, same as Purple Line.
                 informed_entity.push(EntitySelector {
                     route_id: Some("P".to_string()),
+                    ..EntitySelector::default()
+                });
+            } else if impacted_service.service_id == "Train"{
+                informed_entity.push(EntitySelector {
+                    route_type: Some(1), // RouteType::Subway
+                    ..EntitySelector::default()
+                });
+            } else if impacted_service.service_id == "Bus" {
+                informed_entity.push(EntitySelector {
+                    route_type: Some(3), // RouteType::Bus
+                    ..EntitySelector::default()
+                });
+            } else if impacted_service.service_id == "SystemWide" {
+                informed_entity.push(EntitySelector {
+                    route_type: Some(1), // RouteType::Subway
+                    ..EntitySelector::default()
+                });
+                informed_entity.push(EntitySelector {
+                    route_type: Some(3), // RouteType::Bus
                     ..EntitySelector::default()
                 });
             } else {
